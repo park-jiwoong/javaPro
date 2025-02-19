@@ -12,7 +12,7 @@ public class Ex07 {
 		int[] lotto = new int[6]; // 이 배열에다 채워둔다
 
 		fillLotto(lotto); // 채워두는 메소드라고 생각
-		dispLotto(lotto);
+		dispLotto(lotto); // 로또 번호 출력하는 함수
 
 	}// main
 		// [★시험문제★] 두 정수의
