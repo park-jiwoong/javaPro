@@ -6,8 +6,8 @@ package days01;
  * @subject [ 자바 프로그램의 기본 구조 설명 ]
  * @content
  *          JDK = JRE+ 개발도구(java.exe, javac.exe 등등)
- *          JRE = JVM + 클래스라이브러리
- */			
+ *                 = JVM + 클래스라이브러리
+ */
 public class Ex02 {
 
 	public static void main(String[] args) {
