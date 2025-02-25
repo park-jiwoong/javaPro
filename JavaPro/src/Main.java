@@ -1,33 +1,19 @@
 import java.util.Scanner;
 
 public class Main {
-	
 	public static void main(String[] args) {
-		
+
 		Scanner scanner = new Scanner(System.in);
 		
-		int x = scanner.nextInt();
-		int y = scanner.nextInt();
+		int n = scanner.nextInt();
+		int result = 1;
 		
-		if (x>0) {
-			if (y>0) {
-				System.out.println("1");
-			}
-			else {
-				System.out.println("4");
-			}
-		}	
-		
-			if (x<0) {
-				if (y<0) {
-					System.out.println("3");
-				} else {
-					System.out.println("2");
-				}
-			}
-	
+		for (int i = 1; i <=n; i++) {
+			result *= i;
 			
-	}//main
-}// class
+		}
+		System.out.println(result);
 
- 
+	}// main
+
+}// class

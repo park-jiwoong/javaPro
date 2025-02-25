@@ -48,13 +48,15 @@ public class Ex11 {
 		
 		// int i = (int)100L;
 		
-		// [클래스들간의 형변환]
+		// [클래스들간의 형변환] [☆시험 문제 암기☆]
 		// 자동 업캐스팅(upcasting) : 자식객체 생성 -> 부모클래스에 참조
 		// Regular -> 자동 Employee 클래스 간에 형변환
 		Employee emp2 = new Regular("김도훈", "서울시 당산동", "010-1272-2322", "2018.12.12", 3000000);
 		emp2.dispEmpInfo();
 		// emp2.getPay(); 문제점 파악..
 				
+		
+		
 	} // main
 
 } // class
