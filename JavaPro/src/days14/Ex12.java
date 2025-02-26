@@ -86,7 +86,8 @@ public class Ex12 {
 		// 학생정보출력.
 		System.out.printf("> 입력받은 학생수 : %d명\n", cnt);
 		for (int i = 0; i < cnt; i++) {
-			System.out.print( students[i].getInfo() ); 
+			//System.out.print( students[i].getInfo() ); 
+			System.out.println(students[i]);
 		} // for i
 		
 	} // main

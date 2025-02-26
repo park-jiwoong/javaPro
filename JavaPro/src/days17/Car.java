@@ -22,17 +22,17 @@ public class Car {
     Car(){    	
     }
     // 1 생성자
-    Car(Engine engine){  // 매개변수 다형성
+    public Car(Engine engine){  // 매개변수 다형성
     	this.engine = engine;
     }
 	// 메서드
-    void speedUp( int fuel) {
+    public void speedUp( int fuel) {
     	this.engine.moreFuel(fuel);
     }
-    void speedDown(int fule) {
+    public void speedDown(int fule) {
     	this.engine.lessFuel(fule);
     }
-    void stop() {
+    public void stop() {
     	this.engine.stop();
     }
 
