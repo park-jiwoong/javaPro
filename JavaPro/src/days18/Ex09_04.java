@@ -16,7 +16,7 @@ import java.io.IOException;
 public class Ex09_04 {
 
 	public static void main(String[] args) {		
-		String fileName = "C:\\E\\Class\\SS23Class\\JavaClass\\javaPro\\src\\days17\\16일차복습_홍길동.txt";
+		String fileName = "C:\\Class\\JavaClass\\JavaPro\\src\\days19\\학생명단.txt";
 		String line = null ;
 		int lineNumber = 1;
 		
@@ -25,6 +25,7 @@ public class Ex09_04 {
 			
 			while(  ( line = br.readLine() ) != null ) {
 				System.out.printf("%d : %s\n", lineNumber++, line );
+				System.out.println(line.length());
 			}
 			
 		} catch (FileNotFoundException e) {			
