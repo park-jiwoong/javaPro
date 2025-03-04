@@ -13,7 +13,7 @@ public class Ex05_02 {
 
 	public static void main(String[] args) {
 		String source = "안녕하세요. 홍길동입니다."
-				+ "폰번호:011-1234-5678, 집번호: 9입니다.";
+				+ "폰번호:011-1234-5678, 집번호: 02-436-4948입니다.";
 		String pattern = "(0\\d{1,2})-(\\d{3,4})-(\\d{4})";
 		
 		Pattern p = Pattern.compile(pattern);
