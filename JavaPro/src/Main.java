@@ -1,3 +1,5 @@
+import java.util.HashSet;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -13,7 +15,14 @@ public class Main {
 		System.out.print("> 게임 횟수 입력 ? ");
 		int gameNumber = scanner.nextInt();
 		
-		int [][] lotto = new int[gameNumber][6];
+		HashSet lotto = new HashSet();
+		
+		while (lotto.size() < 6); {
+			Random rnd = new Random();
+			int n;
+			n = rnd.nextInt(45)
+		}
+		
 		
 	}// main
 
