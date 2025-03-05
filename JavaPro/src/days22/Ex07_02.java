@@ -22,6 +22,7 @@ public class Ex07_02 {
 		q.offer("김예지");
 		q.offer("남현수");
 		q.offer("서재웅");
+		q.offer("서재웅");
 		System.out.println(q.offer("이정인")); // boolean offer() true / false
 		
 		while (!q.isEmpty()) {
