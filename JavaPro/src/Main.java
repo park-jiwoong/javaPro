@@ -20,7 +20,7 @@ public class Main {
 		while (lotto.size() < 6); {
 			Random rnd = new Random();
 			int n;
-			n = rnd.nextInt(45)
+			n = rnd.nextInt(45);
 		}
 		
 		
