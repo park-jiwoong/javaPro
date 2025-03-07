@@ -4,10 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.HashMap;
+import java.util.List;
 
 public class Main {//Main 무조건 지정
 

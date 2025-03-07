@@ -3,11 +3,8 @@ package days23;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.Set;
-import java.util.Map.Entry;
 
 /**
  * @author kenik
@@ -19,59 +16,88 @@ public class Ex07_02 {
 
 	public static void main(String[] args) {
 		String fileName = ".\\src\\days23\\1차_조편성.txt";
-		String line = null;
+		String line;
 		
 		//순서 유지 O 
-		HashMap<String, ArrayList<String>> class5 = new LinkedHashMap<>();
-
-		String[] lineArr = null;
-		ArrayList<String> team = null;
-
-		try (FileReader reader = new FileReader(fileName);
-				BufferedReader br = new BufferedReader(reader);) {
-
-			while ((line = br.readLine()) != null) {
-				team = new ArrayList<String>(); //
-				lineArr = line.split("[/:]");
-				String teamName = lineArr[0];
-				for (int i = 1; i < lineArr.length; i++) {
-					team.add(lineArr[i]);
-				} // for i
-
-				class5.put(teamName, team);
-
-			} // while
-
-			// 각 팀원 출력형식 출력
-			dispClass(class5);
-
+		//HashMap<String, ArrayList<String>> class5 = new LinkedHashMap<>();
+		LinkedHashMap<String, ArrayList<String>> class5 = new LinkedHashMap<>();
+		
+		try(FileReader reader = new FileReader(fileName);
+			BufferedReader bf = new BufferedReader(reader);) 
+		{
+			while((line = bf.readLine()) != null) {
+				String[] list = line.split("[:/]");
+				ArrayList<String> arr = new ArrayList<String>();
+				
+				for(int i = 1; i<list.length; i++) {
+					arr.add(list[i]);
+				}
+				
+				class5.put(list[0], arr);
+			}
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			
 		}
-
-		System.out.println("end");
+		
+		System.out.println(class5);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//		String[] lineArr = null;
+//		ArrayList<String> team = null;
+//
+//		try (FileReader reader = new FileReader(fileName);
+//				BufferedReader br = new BufferedReader(reader);) {
+//
+//			while ((line = br.readLine()) != null) {
+//				team = new ArrayList<String>(); //
+//				lineArr = line.split("[/:]");
+//				String teamName = lineArr[0];
+//				for (int i = 1; i < lineArr.length; i++) {
+//					team.add(lineArr[i]);
+//				} // for i
+//
+//				class5.put(teamName, team);
+//
+//			} // while
+//
+//			// 각 팀원 출력형식 출력
+//			dispClass(class5);
+//
+//		} catch (Exception e) {
+//			System.out.println(e.toString());
+//		}
+//
+//		System.out.println("end");
 	} // main
 
-	// 반복자 사용해서 출력.
-	   private static void dispClass(HashMap<String, ArrayList<String>> class5) {
-	      
-	      Set<Entry<String, ArrayList<String>>> es = class5.entrySet();
-	      Iterator<Entry<String, ArrayList<String>>> ir = es.iterator();
-	      
-	      while (ir.hasNext()) {
-	         Entry<String, ArrayList<String>> entry =  ir.next();
-	         String key = entry.getKey();
-	         System.out.printf("[%s]\n", key);
-	         ArrayList<String> team = entry.getValue();
-	         char seq = 'A';
-	         Iterator<String> ir2 = team.iterator();
-	         while (ir2.hasNext()) {
-	            String name = ir2.next();
-	            System.out.printf("   %c. %s\n", seq++, name);
-	         } // while
-	      } // while 
-	       
-	   }
+//	// 반복자 사용해서 출력.
+//	   private static void dispClass(HashMap<String, ArrayList<String>> class5) {
+//	      
+//	      Set<Entry<String, ArrayList<String>>> es = class5.entrySet();
+//	      Iterator<Entry<String, ArrayList<String>>> ir = es.iterator();
+//	      
+//	      while (ir.hasNext()) {
+//	         Entry<String, ArrayList<String>> entry =  ir.next();
+//	         String key = entry.getKey();
+//	         System.out.printf("[%s]\n", key);
+//	         ArrayList<String> team = entry.getValue();
+//	         char seq = 'A';
+//	         Iterator<String> ir2 = team.iterator();
+//	         while (ir2.hasNext()) {
+//	            String name = ir2.next();
+//	            System.out.printf("   %c. %s\n", seq++, name);
+//	         } // while
+//	      } // while 
+//	       
+//	   }
 	   
 }//class
 

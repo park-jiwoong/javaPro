@@ -19,8 +19,8 @@ public class Ex11 {
 	
 		// <>제네릭 : 기본형 X, 참조형 ○
 		// HashSet 중복된 데이터는 안들어감
-	//HashSet<Integer> hs = new HashSet<Integer>();
-	LinkedHashSet<Integer> hs = new LinkedHashSet<Integer>();
+	HashSet<Integer> hs = new HashSet<Integer>();
+	//LinkedHashSet<Integer> hs = new LinkedHashSet<Integer>();
 	hs.add(new Integer(100));
 	hs.add(20);	// Auto Boxing 가능함
 	hs.add(20);	// Auto Boxing 가능함

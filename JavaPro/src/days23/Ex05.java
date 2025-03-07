@@ -9,7 +9,7 @@ public class Ex05 {
 		//set - Hashset, LinkedHashSet
 		//		TreeSet
 		/*
-		 * 컬렉스 클래스의 특징
+		 * 컬렉션 클래스의 특징
 		 * 
 		 * 1. 중복허용하지 X, 순서를 유지 O
 		 * 2. 이진 검색 트리 (binary Search Tree) BST 라는 자료구조로 데이터 저장 하는 컬렉션 클래스
