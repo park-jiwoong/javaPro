@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * @subject 
  * @content
  */
-public class Ex01 {
+public class CopyEx01 {
 
 	public static void main(String[] args) {
 		
