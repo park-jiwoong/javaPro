@@ -1,9 +1,23 @@
 package tennis;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 public class TennisGUI extends JFrame {
 
@@ -133,7 +147,7 @@ public class TennisGUI extends JFrame {
             return;
         }
 
-        scorer = new TennisScorer(player1Name, player2Name);
+        scorer = new TennisScorer(new Player(player1Name), new Player(player2Name));
         btnPlayer1.setText(player1Name+" 득점");
         btnPlayer2.setText(player2Name+" 득점");
         
@@ -154,7 +168,7 @@ public class TennisGUI extends JFrame {
         }
         if (scorer.setOver()) {
             setHistory.add(String.format("세트 [%d] - %s: %d, %s: %d",
-                    scorer.currentSet - 1, scorer.player1, scorer.player1GameScore, scorer.player2, scorer.player2GameScore));
+                    scorer.currentSet - 1, scorer.player1Name, scorer.player1.getGameScore(), scorer.player2Name, scorer.player2.getGameScore()));
             scorer.resetGameScores();
             updateSetHistoryDisplay();
         }
@@ -180,7 +194,7 @@ public class TennisGUI extends JFrame {
                 case 3:
                     return "40";
                 default:
-                    if (score > scorer.player2PointScore) {
+                    if (score > scorer.player2.getPointScore()) {
                         return "Adv";
                     } else {
                         return "40";
@@ -202,7 +216,7 @@ public class TennisGUI extends JFrame {
                 case 3:
                     return "40";
                 default:
-                    if (score > scorer.player1PointScore) {
+                    if (score > scorer.player1.getPointScore()) {
                         return "Adv";
                     } else {
                         return "40";
@@ -214,12 +228,12 @@ public class TennisGUI extends JFrame {
     private void updateDisplay() {
         if (scorer != null) {
             lblSetScore.setText(String.format("세트 점수: %s [%d] - %s [%d]",
-                    scorer.player1, scorer.player1SetScore, scorer.player2, scorer.player2SetScore));
+                    scorer.player1Name, scorer.player1.getSetScore(), scorer.player2Name, scorer.player2.getSetScore()));
             lblGameScore.setText(String.format("게임 점수: [%d - %d]",
-                    scorer.player1GameScore, scorer.player2GameScore));
+                    scorer.player1.getGameScore(), scorer.player2.getGameScore()));
 
             lblPointScore.setText(String.format("%s - %s",
-                    convertTennis1Score(scorer.player1PointScore), convertTennis2Score(scorer.player2PointScore)));
+                    convertTennis1Score(scorer.player1.getPointScore()), convertTennis2Score(scorer.player2.getPointScore())));
         }
     }
 
@@ -234,7 +248,7 @@ public class TennisGUI extends JFrame {
     }
 
     private void announceWinner() {
-        String winner = (scorer.player1SetScore == 2) ? scorer.player1 : scorer.player2;
+        String winner = (scorer.player1.getSetScore() == 2) ? scorer.player1.getPlayerName() : scorer.player2.getPlayerName();
         
         JOptionPane.showMessageDialog(this, "경기 종료! " + winner + " 승리!", "게임 종료", JOptionPane.INFORMATION_MESSAGE);
         
