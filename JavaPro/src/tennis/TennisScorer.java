@@ -1,209 +1,158 @@
 package tennis;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class TennisScorer implements TennisManager {
-	Player player1, player2;
-	FileManager fileManager;
+    Team team1, team2;
+    FileManager fileManager;
+    int currentSet = 1;
+    String team1Name, team2Name;
+    boolean tieBreak = false, gender, isDoubles, gameOver, setOver, finalOver;
+    final int WIN_CONDITION;
+    
+    // 게임 기록 저장
+    ArrayList<ArrayList<Integer>> gameHistoryList = new ArrayList<>();
 
-//   int player1PointScore, player2PointScore;
-//   int player1GameScore, player2GameScore;
-//   int player1SetScore, player2SetScore;
+    // 생성자
+    TennisScorer(Team team1, Team team2, boolean gender, boolean isDoubles) {
+        this.team1 = team1;
+        this.team2 = team2;
+        this.team1Name = team1.getTeamName();
+        this.team2Name = team2.getTeamName();
+        this.fileManager = new FileManager(this);
+        this.WIN_CONDITION = ((!isDoubles && gender) ? GRAND_SLAM_MEN_SOLOS_SET_NUMBER : GRAND_SLAM_OTHERS_SET_NUMBER) - 1;
+        this.gender = gender;
+        this.isDoubles = isDoubles;
+        fileManager.writeInit(); // 초기화 작업
+    }
 
-	int currentSet = 1;
+    // 득점 처리
+    @Override
+    public void pointWinner(int p) {
+        gameOver = setOver = finalOver = false;
+        
+        if (p == 1) {
+            team1.updatePointScore();
+            System.out.printf("%s 선수가 득점했습니다!\n", team1Name);
+        } else {
+            team2.updatePointScore();
+            System.out.printf("%s 선수가 득점했습니다!\n", team2Name);
+        }
 
-	String player1Name;
-	String player2Name;
+        saveRecordToArrayList();
+        dispScoreBoard();
 
-	boolean tieBreak = false;
-	
-	ArrayList<ArrayList<Integer>> gameHistoryList = new ArrayList<>();
-	
-	TennisScorer(Player player1, Player player2) {
-		this.player1 = player1;
-		this.player2 = player2;
+        if (gameOver = gameOver(tieBreak)) {
+            updateGameResult();
+            if (setOver = setOver()) {
+                updateSetResult();
+                if (finalOver = finalOver()) {
+                    tennisEnd();
+                }
+            }
+        }
+    }
 
-		this.player1Name = player1.getPlayerName();
-		this.player2Name = player2.getPlayerName();
-		
-		this.fileManager = new FileManager(player1, player2);
+    // 콘솔 출력
+    @Override
+    public void dispScoreBoard() {
+        System.out.println("==========================================================");
+        System.out.printf("[%d세트]       \tS\t\tG\t\tP\n", currentSet);
+        printTeamScore(team1);
+        printTeamScore(team2);
+        System.out.println("==========================================================\n");
+    }
 
-	}
+    private void printTeamScore(Team team) {
+        System.out.print(String.format("%-12s", team.getTeamName()));
+        System.out.printf("\t%d\t\t%d\t\t%d\n", team.getSetScore(), team.getGameScore(), team.getPointScore());
+    }
 
-	@Override
-	public void startGame() {
-		
-		while (!finalOver()) {
-			
-			while (!setOver()) {
-				
-				while (!gameOver(tieBreak)) {
-					
-					playGame();
-				}
-				
-				resetPointScores();
-			}
-			
-			resetGameScores();
-		}
-		
-		resetSetScores();
-	}
+    // 게임 종료 후 처리
+    public void updateGameResult() {
+        Team winner = (team1.getPointScore() > team2.getPointScore()) ? team1 : team2;
+        winner.updateGameScore();
+        System.out.printf("%s *게임 스코어* 획득\n", winner.getTeamName());
+        resetPointScores();
+        tieBreakUpdate();
+    }
 
-	@Override
-	public void playGame() {
-		Random rnd = new Random();
-		pointWinner(rnd.nextInt(2) + 1);
-	}
+    // 세트 종료 후 처리
+    public void updateSetResult() {
+        Team winner = (team1.getGameScore() > team2.getGameScore()) ? team1 : team2;
+        winner.updateSetScore();
+        System.out.println("그리고 세트를 가져옵니다");
+        currentSet++;
+        resetGameScores();
+    }
 
-	public boolean gameOver(boolean tieBreak) {
+    // 최종 결과 출력
+    private void printFinalResult() {
+        System.out.println("\n<최종 결과>");
+        System.out.printf("세트 스코어 -> [%d : %d]\n", team1.getSetScore(), team2.getSetScore());
+        if (team1.getSetScore() == WIN_CONDITION) {
+            System.out.println("1번 선수 최종 승리\n");
+        } else {
+            System.out.println("2번 선수 최종 승리\n");
+        }
+    }
 
-		int player1PointScore = player1.getPointScore();
-		int player2PointScore = player2.getPointScore();
+    // 기록 저장
+    private void saveRecordToArrayList() {
+        ArrayList<Integer> gameHistory = new ArrayList<>();
+        gameHistory.add(team1.getPointScore());
+        gameHistory.add(team2.getPointScore());
+        gameHistoryList.add(gameHistory);
+    }
 
-		int diff = player1PointScore - player2PointScore;
-		int minScore = tieBreak ? 7 : 4;
+    private void saveRecordToFile() {
+        fileManager.writeGameHistory();
+    }
 
-		boolean result = false;
+    // 게임 종료 체크
+    public boolean gameOver(boolean tieBreak) {
+        int team1PointScore = team1.getPointScore();
+        int team2PointScore = team2.getPointScore();
+        int diff = Math.abs(team1PointScore - team2PointScore);
+        return (team1PointScore >= (tieBreak ? 7 : 4) || team2PointScore >= (tieBreak ? 7 : 4)) && diff >= 2;	//  	diff 점수차 2점
+    }
 
-		dispScoreBoard();
-		saveRecordToArrayList();
+    // 세트 종료 체크
+    public boolean setOver() {
+        int diff = Math.abs(team1.getGameScore() - team2.getGameScore());
+        return (team1.getGameScore() >= 6 || team2.getGameScore() >= 6) && diff >= 2 || team1.getGameScore() == 7 || team2.getGameScore() == 7; // 6점을 달성하고 나서 2점 차이가 이상이 날때 || 타이브레이크 7점 상황일 때 종료
+    }
 
-		if ((player1PointScore >= minScore || player2PointScore >= minScore) && Math.abs(diff) >= 2) {
+    // 경기 종료 체크
+    public boolean finalOver() {
+        return team1.getSetScore() == WIN_CONDITION || team2.getSetScore() == WIN_CONDITION; // 남자 단식 조건 5판중 3판 승리 //여자 단식 5판중 2판 승리
+    }
 
-			int winner = (player1PointScore > player2PointScore) ? 1 : 2;
+    // 타이브레이크 설정
+    public void tieBreakUpdate() {
+        if (team1.getGameScore() == 6 && team2.getGameScore() == 6) {
+            this.tieBreak = true;
+        }
+    }
 
-			if (winner == 1) {
-				player1.updateGameScore();
-				System.out.printf("%s *게임 스코어* 획득\n", player1Name);
-			} else {
-				player2.updateGameScore();
-				System.out.printf("%s *게임 스코어* 획득\n", player2Name);
-			}
+    // 점수 초기화
+    public void resetPointScores() {
+        team1.initPointScore();
+        team2.initPointScore();
+        saveRecordToFile();
+        gameHistoryList.clear();
+    }
 
-			tieBreakUpdate();
+    // 게임 점수 초기화
+    public void resetGameScores() {
+        team1.initGameScore();
+        team2.initGameScore();
+        this.tieBreak = false;
+    }
 
-			result = true;
-		}
-
-		return result;
-	}
-
-	private void saveRecordToFile() {
-		fileManager.writeGameHistory(this);
-	}
-
-	private void saveRecordToArrayList() {
-		ArrayList<Integer> gameHistory = new ArrayList<>();
-		gameHistory.add(player1.getPointScore());
-		gameHistory.add(player2.getPointScore());
-		gameHistoryList.add(gameHistory);
-	}
-
-	public void tieBreakUpdate() {
-		if (player1.getGameScore() == 6 && player2.getGameScore() == 6) {
-			this.tieBreak = true;
-		}
-	}
-
-	public boolean setOver() {
-
-		int player1GameScore = player1.getGameScore();
-		int player2GameScore = player2.getGameScore();
-
-		int diff = player1GameScore - player2GameScore;
-		boolean result = false;
-
-		if ((player1GameScore >= 6 || player2GameScore >= 6) && Math.abs(diff) >= 2 || player1GameScore == 7
-				|| player2GameScore == 7) {
-
-			int winner = (player1GameScore > player2GameScore) ? 1 : 2;
-
-			if (winner == 1) {
-				System.out.println("그리고 세트를 가져옵니다");
-				player1.updateSetScore();
-			} else {
-				System.out.println("그리고 세트를 가져옵니다");
-				player2.updateSetScore();
-			}
-
-			currentSet++;
-			result = true;
-		}
-		return result;
-	}
-
-	public boolean finalOver() {
-
-		int player1SetScore = player1.getSetScore();
-		int player2SetScore = player2.getSetScore();
-
-		if (player1SetScore == 2 || player2SetScore == 2) {
-
-			System.out.println("\n<최종 결과>");
-			System.out.printf("세트 스코어 -> [%d : %d]\n", player1SetScore, player2SetScore);
-
-			if (player1SetScore == 2) {
-				System.out.println("1번 선수 최종 승리\n");
-			} else {
-				System.out.println("2번 선수 최종 승리\n");
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public void pointWinner(int p) {
-		if (p == 1) {
-			System.out.printf("%s 선수가 득점했습니다!\n", player1Name);
-			player1.updatePointScore();
-		} else {
-			System.out.printf("%s 선수가 득점했습니다!\n", player2Name);
-			player2.updatePointScore();
-		}
-	}
-
-	public void dispScoreBoard() {
-//        System.out.printf("1번[%s] : %d , 2번[%s] : %d\t게임 스코어 : [%d : %d]\t 세트 스코어 : [%d : %d]\n\n", 
-//            player1, player1PointScore, player2, player2PointScore, player1GameScore, player2GameScore, player1SetScore, player2SetScore);
-
-		System.out.println("==========================================================");
-		System.out.printf("[%d세트]\t\tS\t\tG\t\tP\n", currentSet);
-		System.out.print(" " + player1Name);
-		System.out.printf("\t\t%d\t\t%d\t\t%d\n", player1.getSetScore(), player1.getGameScore(),
-				player1.getPointScore());
-		System.out.print(" " + player2Name);
-		System.out.printf("\t\t%d\t\t%d\t\t%d\n", player2.getSetScore(), player2.getGameScore(),
-				player2.getPointScore());
-		System.out.println("==========================================================");
-
-		System.out.println();
-	}
-
-	public void resetPointScores() {
-		player1.initPointScore();
-		player2.initPointScore();
-		
-		
-		saveRecordToFile();
-		gameHistoryList.clear();
-	}
-
-	public void resetGameScores() {
-		player1.initGameScore();
-		player2.initGameScore();
-
-		this.tieBreak = false;
-	}
-
-	public void resetSetScores() {
-		fileManager.writeFinalResult(this);
-		
-		player1.initSetScore();
-		player2.initSetScore();
-
-		currentSet = 1;
-	}
+    // 경기 종료
+    public void tennisEnd() {
+        printFinalResult();
+        fileManager.writeFinalResult();
+    }
 }

@@ -1,8 +1,14 @@
 package tennis;
 
+import java.util.Random;
+
 public class Main {
 	public static void main(String[] args) {
-		TennisScorer tennisScorer = new TennisScorer(new Player("최인석"), new Player("최승호"));
-		tennisScorer.startGame();
+		
+		Random random = new Random();
+		
+		System.out.println(random.nextInt(35) +1);
+		
+		new TennisGUI().setVisible(true);
 	}
 }
