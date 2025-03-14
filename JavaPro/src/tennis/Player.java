@@ -1,9 +1,8 @@
 package tennis;
 
 public class Player {
-	String playerName;
-	Boolean gender;
-
+	private String playerName;
+	
 	Player(String name) {
 		this.playerName = name;
 	}
@@ -14,13 +13,5 @@ public class Player {
 
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
-	}
-
-	public Boolean getGender() {
-		return gender;
-	}
-
-	public void setGender(Boolean gender) {
-		this.gender = gender;
 	}
 }

@@ -73,7 +73,8 @@ public class FileManager {
         int originalScore = historyList.get(index).get(team);
         int compareScore = historyList.get(index).get((team + 1) % 2);
 
-        String convertedString = isTieBreak ? String.format("%d", originalScore) : String.format("%3s",convertNormalScore(originalScore, compareScore));
+        String convertedString = isTieBreak ? String.format("%2d", originalScore) : String.format("%3s", convertNormalScore(originalScore, compareScore));
+        
         if (index == historyList.size() - 1 && originalScore > compareScore) {
             convertedString = "WIN";
         }

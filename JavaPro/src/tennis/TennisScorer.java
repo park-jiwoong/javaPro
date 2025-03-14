@@ -20,7 +20,7 @@ public class TennisScorer implements TennisManager {
         this.team1Name = team1.getTeamName();
         this.team2Name = team2.getTeamName();
         this.fileManager = new FileManager(this);
-        this.WIN_CONDITION = ((!isDoubles && gender) ? GRAND_SLAM_MEN_SOLOS_SET_NUMBER : GRAND_SLAM_OTHERS_SET_NUMBER) - 1;
+        this.WIN_CONDITION = (!isDoubles && gender) ? GRAND_SLAM_MEN_SOLOS_SET_NUMBER-2 : GRAND_SLAM_OTHERS_SET_NUMBER-1;
         this.gender = gender;
         this.isDoubles = isDoubles;
         fileManager.writeInit(); // 초기화 작업
@@ -90,6 +90,7 @@ public class TennisScorer implements TennisManager {
     private void printFinalResult() {
         System.out.println("\n<최종 결과>");
         System.out.printf("세트 스코어 -> [%d : %d]\n", team1.getSetScore(), team2.getSetScore());
+        
         if (team1.getSetScore() == WIN_CONDITION) {
             System.out.println("1번 선수 최종 승리\n");
         } else {
@@ -114,23 +115,23 @@ public class TennisScorer implements TennisManager {
         int team1PointScore = team1.getPointScore();
         int team2PointScore = team2.getPointScore();
         int diff = Math.abs(team1PointScore - team2PointScore);
-        return (team1PointScore >= (tieBreak ? 7 : 4) || team2PointScore >= (tieBreak ? 7 : 4)) && diff >= 2;	//  	diff 점수차 2점
+        return Math.max(team1PointScore, team2PointScore) >= (tieBreak ? TIE_BREAKER_WIN_CONDITION : 4) && diff >= 2;
     }
 
     // 세트 종료 체크
     public boolean setOver() {
         int diff = Math.abs(team1.getGameScore() - team2.getGameScore());
-        return (team1.getGameScore() >= 6 || team2.getGameScore() >= 6) && diff >= 2 || team1.getGameScore() == 7 || team2.getGameScore() == 7; // 6점을 달성하고 나서 2점 차이가 이상이 날때 || 타이브레이크 7점 상황일 때 종료
+        return (Math.max(team1.getGameScore(), team2.getGameScore()) >= 6) && diff >= 2 || team1.getGameScore() == 7 || team2.getGameScore() == 7;
     }
 
     // 경기 종료 체크
     public boolean finalOver() {
-        return team1.getSetScore() == WIN_CONDITION || team2.getSetScore() == WIN_CONDITION; // 남자 단식 조건 5판중 3판 승리 //여자 단식 5판중 2판 승리
+        return Math.max(team1.getSetScore(), team2.getSetScore()) == WIN_CONDITION;
     }
 
     // 타이브레이크 설정
     public void tieBreakUpdate() {
-        if (team1.getGameScore() == 6 && team2.getGameScore() == 6) {
+        if (team1.getGameScore() == TIE_BREAKER_ACTIVATE_GAME_NUMBER && team2.getGameScore() == TIE_BREAKER_ACTIVATE_GAME_NUMBER) {
             this.tieBreak = true;
         }
     }
